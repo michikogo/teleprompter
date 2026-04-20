@@ -89,3 +89,73 @@ button:disabled {
 button:hover:not(:disabled) {
   opacity: 0.85;
 }
+
+/* Teleprompter display */
+.teleprompter {
+  height: 100vh;
+}
+
+.teleprompter-scroll {
+  height: 100vh;
+  overflow-y: scroll;
+  scroll-behavior: smooth;
+  display: flex;
+  flex-direction: column;
+  padding: 50vh 4rem;
+  gap: 0.25rem;
+  scrollbar-width: none;
+}
+
+.teleprompter-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.teleprompter-line {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 0.5rem 0;
+  opacity: 0.3;
+  transition: opacity 0.2s;
+  font-size: clamp(1.75rem, 4vw, 3rem);
+  font-weight: 600;
+  line-height: 1.3;
+  cursor: pointer;
+}
+
+.teleprompter-line.active-line {
+  opacity: 1;
+}
+
+.teleprompter-word {
+  cursor: pointer;
+  border-radius: 4px;
+  padding: 0 2px;
+  transition: color 0.15s;
+}
+
+.teleprompter-word.active-word {
+  color: #f0c040;
+}
+
+.teleprompter-controls {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 1rem 4rem;
+  background: rgba(15, 15, 15, 0.92);
+  backdrop-filter: blur(8px);
+  border-top: 1px solid #222;
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+}
+
+.teleprompter-controls button {
+  background: #1a1a1a;
+  color: #f0f0f0;
+  border: 1px solid #333;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+}
