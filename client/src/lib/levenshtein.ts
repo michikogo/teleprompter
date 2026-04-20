@@ -1,3 +1,5 @@
+// Custom implementation instead of a package (e.g. `fastest-levenshtein`)
+// to demonstrate the algorithm and avoid an external dependency for ~20 lines of code.
 export const levenshtein = (a: string, b: string): number => {
   const m = a.length;
   const n = b.length;
