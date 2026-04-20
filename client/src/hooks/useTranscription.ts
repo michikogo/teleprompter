@@ -6,14 +6,23 @@ const SERVER_WS_URL = "ws://localhost:3001";
 
 export type TranscriptionState = {
   isListening: boolean;
-  transcriptWords: string[];
+  transcriptWords: string[];  // accumulated final words
+  interimWords: string[];     // current in-progress segment (replaced, not appended)
   error: string | null;
 };
+
+const normalize = (text: string): string[] =>
+  text
+    .toLowerCase()
+    .replace(/[^a-z0-9\s]/g, "")
+    .split(/\s+/)
+    .filter(Boolean);
 
 export const useTranscription = () => {
   const [state, setState] = useState<TranscriptionState>({
     isListening: false,
     transcriptWords: [],
+    interimWords: [],
     error: null,
   });
 
@@ -35,7 +44,7 @@ export const useTranscription = () => {
     wsRef.current?.close();
     wsRef.current = null;
 
-    setState((s) => ({ ...s, isListening: false }));
+    setState((s) => ({ ...s, isListening: false, interimWords: [] }));
   }, []);
 
   const start = useCallback(async () => {
@@ -76,17 +85,21 @@ export const useTranscription = () => {
           const msg = JSON.parse(e.data);
           const transcript: string | undefined =
             msg?.channel?.alternatives?.[0]?.transcript;
-          if (!transcript || msg?.is_final === false) return;
-          const newWords = transcript
-            .toLowerCase()
-            .replace(/[^a-z0-9\s]/g, "")
-            .split(/\s+/)
-            .filter(Boolean);
-          if (newWords.length > 0) {
+          if (!transcript) return;
+
+          const words = normalize(transcript);
+          if (words.length === 0) return;
+
+          if (msg.is_final) {
+            // Commit to permanent history, clear interim buffer
             setState((s) => ({
               ...s,
-              transcriptWords: [...s.transcriptWords, ...newWords],
+              transcriptWords: [...s.transcriptWords, ...words],
+              interimWords: [],
             }));
+          } else {
+            // Replace interim buffer (not append) to avoid duplicates
+            setState((s) => ({ ...s, interimWords: words }));
           }
         } catch {
           // ignore malformed messages
@@ -102,7 +115,7 @@ export const useTranscription = () => {
       };
 
       ws.onclose = () => {
-        setState((s) => ({ ...s, isListening: false }));
+        setState((s) => ({ ...s, isListening: false, interimWords: [] }));
       };
     } catch (err) {
       const message =
@@ -112,7 +125,7 @@ export const useTranscription = () => {
   }, [stop]);
 
   const reset = useCallback(() => {
-    setState((s) => ({ ...s, transcriptWords: [] }));
+    setState((s) => ({ ...s, transcriptWords: [], interimWords: [] }));
   }, []);
 
   return { ...state, start, stop, reset };

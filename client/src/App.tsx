@@ -12,7 +12,7 @@ const App = () => {
   const [script, setScript] = useState("");
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
 
-  const { isListening, transcriptWords, error, start, stop, reset } =
+  const { isListening, transcriptWords, interimWords, error, start, stop, reset } =
     useTranscription();
 
   const scriptWords = tokenizeScript(script).map((w) => w.normalized);
@@ -21,14 +21,15 @@ const App = () => {
     scriptWordsRef.current = scriptWords;
   }, [scriptWords]);
 
+  // Combine final + interim for real-time position tracking
+  const allWords = [...transcriptWords, ...interimWords];
+
   useEffect(() => {
-    if (transcriptWords.length === 0) return;
-    // Functional updater gives us latest currentWordIndex without adding it
-    // to deps (which would cause the effect to re-run on every scroll step).
+    if (allWords.length === 0) return;
     setCurrentWordIndex((prev) =>
-      findBestPosition(scriptWordsRef.current, transcriptWords, prev)
+      findBestPosition(scriptWordsRef.current, allWords, prev)
     );
-  }, [transcriptWords]);
+  }, [allWords.length]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleStart = (scriptText: string) => {
     setScript(scriptText);
@@ -62,6 +63,7 @@ const App = () => {
           scriptText={script}
           currentWordIndex={currentWordIndex}
           isListening={isListening}
+          lastHeard={allWords.slice(-5).join(" ")}
           onWordClick={handleWordClick}
           onReset={handleReset}
           onBack={handleBack}

@@ -5,6 +5,7 @@ type Props = {
   scriptText: string;
   currentWordIndex: number;
   isListening: boolean;
+  lastHeard: string;
   onWordClick: (index: number) => void;
   onReset: () => void;
   onBack: () => void;
@@ -14,6 +15,7 @@ const TeleprompterDisplay = ({
   scriptText,
   currentWordIndex,
   isListening,
+  lastHeard,
   onWordClick,
   onReset,
   onBack,
@@ -60,6 +62,9 @@ const TeleprompterDisplay = ({
           <span className={`mic-indicator${isListening ? " active" : ""}`}>
             {isListening ? "● Listening" : "○ Not listening"}
           </span>
+          {lastHeard && (
+            <span className="last-heard">heard: "{lastHeard}"</span>
+          )}
           <button onClick={onReset}>↺ Reset</button>
         </div>
       </div>
