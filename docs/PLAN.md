@@ -47,7 +47,7 @@ Each phase is its own branch and PR against `main`.
 | Phase | Branch | Status | What the PR shows |
 | --- | --- | --- | --- |
 | 1 | `phase/1-scaffolding` | ✅ | Empty app skeleton, tooling, CI, PR template |
-| 2 | `phase/2-backend-proxy` | ⬜ | Working WS proxy; testable with a WS client |
+| 2 | `phase/2-backend-proxy` | ✅ | Working WS proxy; testable with a WS client |
 | 3 | `phase/3-script-input` | ⬜ | Script input screen renders in browser |
 | 4 | `phase/4-display` | ⬜ | Teleprompter display renders and scrolls |
 | 5 | `phase/5-fuzzy-matching` | ⬜ | Fuzzy matching logic + passing unit tests |
@@ -72,7 +72,7 @@ Each phase is its own branch and PR against `main`.
 
 ---
 
-## Phase 2 — Backend Proxy ⬜
+## Phase 2 — Backend Proxy ✅
 
 **Branch:** `phase/2-backend-proxy`
 
