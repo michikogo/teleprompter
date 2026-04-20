@@ -1,4 +1,7 @@
-import "dotenv/config";
+import dotenv from "dotenv";
+import path from "path";
+// .env lives at the repo root; CWD when server starts is server/
+dotenv.config({ path: path.resolve(__dirname, "../../.env") });
 import express from "express";
 import { createServer } from "http";
 import { WebSocketServer, WebSocket } from "ws";
