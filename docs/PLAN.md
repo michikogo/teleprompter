@@ -44,16 +44,16 @@ teleprompter/
 
 Each phase is its own branch and PR against `main`.
 
-| Phase | Branch | Status | What the PR shows |
-| --- | --- | --- | --- |
-| 1 | `phase/1-scaffolding` | ✅ | Empty app skeleton, tooling, CI, PR template |
-| 2 | `phase/2-backend-proxy` | ✅ | Working WS proxy; testable with a WS client |
-| 3 | `phase/3-script-input` | ⬜ | Script input screen renders in browser |
-| 4 | `phase/4-display` | ⬜ | Teleprompter display renders and scrolls |
-| 5 | `phase/5-fuzzy-matching` | ⬜ | Fuzzy matching logic + passing unit tests |
-| 6 | `phase/6-transcription` | ⬜ | Mic → backend → transcript words flowing |
-| 7 | `phase/7-wire-up` | ⬜ | Full end-to-end: speech drives scroll |
-| 8 | `phase/8-manual-controls` | ⬜ | Reset + click-to-reposition working |
+| Phase | Branch                    | Status | What the PR shows                            |
+| ----- | ------------------------- | ------ | -------------------------------------------- |
+| 1     | `phase/1-scaffolding`     | ✅     | Empty app skeleton, tooling, CI, PR template |
+| 2     | `phase/2-backend-proxy`   | ✅     | Working WS proxy; testable with a WS client  |
+| 3     | `phase/3-script-input`    | ⬜     | Script input screen renders in browser       |
+| 4     | `phase/4-display`         | ⬜     | Teleprompter display renders and scrolls     |
+| 5     | `phase/5-fuzzy-matching`  | ⬜     | Fuzzy matching logic + passing unit tests    |
+| 6     | `phase/6-transcription`   | ⬜     | Mic → backend → transcript words flowing     |
+| 7     | `phase/7-wire-up`         | ⬜     | Full end-to-end: speech drives scroll        |
+| 8     | `phase/8-manual-controls` | ⬜     | Reset + click-to-reposition working          |
 
 ---
 
@@ -95,16 +95,19 @@ Each phase is its own branch and PR against `main`.
 **Branch:** `phase/3-script-input`
 
 **`client/src/data/sampleScripts.ts`**
+
 - Export `{ title: string; text: string }[]` with 4 sample scripts
 - Suggestions: product demo pitch, news broadcast intro, wedding speech, tech talk opener
 
 **`client/src/components/ScriptInput.tsx`**
+
 - `<select>` dropdown — selecting a template populates the textarea
 - `<textarea>` for freeform input/edit
 - "Read Back Script" button — disabled if textarea empty
 - On click: calls `onStart(scriptText)` prop
 
 **`client/src/App.tsx`**
+
 - State: `mode: 'input' | 'reading'`, `script: string`
 - Renders `<ScriptInput>` or `<TeleprompterDisplay>` based on mode
 
@@ -115,15 +118,18 @@ Each phase is its own branch and PR against `main`.
 **Branch:** `phase/4-display`
 
 **`client/src/lib/scriptTokenizer.ts`**
+
 ```ts
 type ScriptWord = { raw: string; normalized: string; index: number }
 const tokenizeScript = (text: string): ScriptWord[]
 const groupIntoLines = (words: ScriptWord[], wordsPerLine = 5): ScriptWord[][]
 ```
+
 - `normalized`: lowercase, punctuation stripped (for matching)
 - `raw`: original text (for display)
 
 **`client/src/components/TeleprompterDisplay.tsx`**
+
 - Props: `scriptText`, `currentWordIndex`, `onWordClick`, `onReset`
 - Renders lines of ~5 words; highlights word at `currentWordIndex`
 - On position change: `scrollIntoView({ behavior: 'smooth', block: 'center' })` on active line
@@ -136,12 +142,14 @@ const groupIntoLines = (words: ScriptWord[], wordsPerLine = 5): ScriptWord[][]
 **Branch:** `phase/5-fuzzy-matching`
 
 **`client/src/lib/levenshtein.ts`**
+
 ```ts
 const levenshtein = (a: string, b: string): number  // edit distance
 const similarity = (a: string, b: string): number   // 0–1, 1 = identical
 ```
 
 **`client/src/lib/positionTracker.ts`**
+
 ```ts
 const WINDOW_SIZE = 10        // last N transcript words to match against
 const LOOKAHEAD = 100         // max words ahead to scan for a skip
@@ -155,6 +163,7 @@ const findBestPosition = (
 ```
 
 **`client/src/lib/positionTracker.test.ts`**
+
 - Normal read → position advances
 - Filler words inserted → position still advances
 - Off-script → position holds
@@ -168,6 +177,7 @@ const findBestPosition = (
 **Branch:** `phase/6-transcription`
 
 **`client/src/hooks/useTranscription.ts`**
+
 ```ts
 const useTranscription = () => ({
   start: () => void,
@@ -176,6 +186,7 @@ const useTranscription = () => ({
   transcriptWords: string[],
 })
 ```
+
 - `start()`: mic via `getUserMedia` → `AudioContext` (16kHz) → `ScriptProcessorNode` → PCM Int16 → binary WS frames to `ws://localhost:3001`
 - Parse incoming Deepgram JSON → append words to state
 - `stop()`: close AudioContext + WebSocket
@@ -187,6 +198,7 @@ const useTranscription = () => ({
 **Branch:** `phase/7-wire-up`
 
 In `App.tsx` (reading mode):
+
 - Call `useTranscription()`
 - On `transcriptWords` update → `findBestPosition` → `setCurrentWordIndex`
 - Pass state + handlers to `<TeleprompterDisplay>`
