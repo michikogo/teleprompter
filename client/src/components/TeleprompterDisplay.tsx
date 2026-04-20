@@ -6,6 +6,7 @@ type Props = {
   currentWordIndex: number;
   onWordClick: (index: number) => void;
   onReset: () => void;
+  onBack: () => void;
 };
 
 const TeleprompterDisplay = ({
@@ -13,6 +14,7 @@ const TeleprompterDisplay = ({
   currentWordIndex,
   onWordClick,
   onReset,
+  onBack,
 }: Props) => {
   const activeLineRef = useRef<HTMLDivElement>(null);
   const words = tokenizeScript(scriptText);
@@ -51,6 +53,7 @@ const TeleprompterDisplay = ({
       </div>
 
       <div className="teleprompter-controls">
+        <button onClick={onBack}>← Back</button>
         <button onClick={onReset}>↺ Reset</button>
       </div>
     </div>

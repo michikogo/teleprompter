@@ -104,7 +104,7 @@ button:hover:not(:disabled) {
   scroll-behavior: smooth;
   display: flex;
   flex-direction: column;
-  padding: 50vh 4rem;
+  padding: 50vh 4rem 50vh;
   gap: 0.25rem;
   /* hide scrollbar visually */
   scrollbar-width: none;

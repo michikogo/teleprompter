@@ -30,6 +30,7 @@ const App = () => {
         currentWordIndex={currentWordIndex}
         onWordClick={handleWordClick}
         onReset={handleReset}
+        onBack={() => setMode("input")}
       />
     );
   }
