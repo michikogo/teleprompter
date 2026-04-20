@@ -92,21 +92,17 @@ button:hover:not(:disabled) {
 
 /* Teleprompter display */
 .teleprompter {
-  display: flex;
-  flex-direction: column;
   height: 100vh;
-  overflow: hidden;
 }
 
 .teleprompter-scroll {
-  flex: 1;
+  height: 100vh;
   overflow-y: scroll;
   scroll-behavior: smooth;
   display: flex;
   flex-direction: column;
-  padding: 50vh 4rem 50vh;
+  padding: 50vh 4rem;
   gap: 0.25rem;
-  /* hide scrollbar visually */
   scrollbar-width: none;
 }
 
@@ -143,7 +139,13 @@ button:hover:not(:disabled) {
 }
 
 .teleprompter-controls {
-  padding: 1.25rem 4rem;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 1rem 4rem;
+  background: rgba(15, 15, 15, 0.92);
+  backdrop-filter: blur(8px);
   border-top: 1px solid #222;
   display: flex;
   gap: 1rem;
