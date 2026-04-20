@@ -159,3 +159,32 @@ button:hover:not(:disabled) {
   font-size: 0.9rem;
   padding: 0.5rem 1rem;
 }
+
+.controls-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.mic-indicator {
+  font-size: 0.85rem;
+  color: #666;
+}
+
+.mic-indicator.active {
+  color: #4caf50;
+}
+
+/* Error banner */
+.error-banner {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: #7f1d1d;
+  color: #fca5a5;
+  padding: 0.75rem 2rem;
+  font-size: 0.9rem;
+  text-align: center;
+  z-index: 10;
+}
