@@ -50,7 +50,7 @@ Each phase is its own branch and PR against `main`.
 | 2     | `phase/2-backend-proxy`   | ✅     | Working WS proxy; testable with a WS client  |
 | 3     | `phase/3-script-input`    | ✅     | Script input screen renders in browser       |
 | 4     | `phase/4-display`         | ✅     | Teleprompter display renders and scrolls     |
-| 5     | `phase/5-fuzzy-matching`  | ⬜     | Fuzzy matching logic + passing unit tests    |
+| 5     | `phase/5-fuzzy-matching`  | ✅     | Fuzzy matching logic + passing unit tests    |
 | 6     | `phase/6-transcription`   | ⬜     | Mic → backend → transcript words flowing     |
 | 7     | `phase/7-wire-up`         | ⬜     | Full end-to-end: speech drives scroll        |
 | 8     | `phase/8-manual-controls` | ⬜     | Reset + click-to-reposition working          |
@@ -137,7 +137,7 @@ const groupIntoLines = (words: ScriptWord[], wordsPerLine = 5): ScriptWord[][]
 
 ---
 
-## Phase 5 — Fuzzy Matching ⬜
+## Phase 5 — Fuzzy Matching ✅
 
 **Branch:** `phase/5-fuzzy-matching`
 
