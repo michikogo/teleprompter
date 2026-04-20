@@ -155,4 +155,3 @@ The product requires sample scripts for demonstration. Scripts are ephemeral per
 - Scripts cannot be saved between sessions — acceptable per requirements
 - Templates are not user-editable without a code change
 - Saves significant scope in a 3–4 hour build
-
