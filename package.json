@@ -1,0 +1,29 @@
+{
+  "name": "teleprompter",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "dev": "concurrently \"npm run dev --prefix client\" \"npm run dev --prefix server\"",
+    "test": "npm run test --prefix client",
+    "lint": "npm run lint --prefix client"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/michikogo/teleprompter.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/michikogo/teleprompter/issues"
+  },
+  "homepage": "https://github.com/michikogo/teleprompter#readme",
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}
