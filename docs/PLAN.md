@@ -48,7 +48,7 @@ Each phase is its own branch and PR against `main`.
 | ----- | ------------------------- | ------ | -------------------------------------------- |
 | 1     | `phase/1-scaffolding`     | ✅     | Empty app skeleton, tooling, CI, PR template |
 | 2     | `phase/2-backend-proxy`   | ✅     | Working WS proxy; testable with a WS client  |
-| 3     | `phase/3-script-input`    | ⬜     | Script input screen renders in browser       |
+| 3     | `phase/3-script-input`    | ✅     | Script input screen renders in browser       |
 | 4     | `phase/4-display`         | ⬜     | Teleprompter display renders and scrolls     |
 | 5     | `phase/5-fuzzy-matching`  | ⬜     | Fuzzy matching logic + passing unit tests    |
 | 6     | `phase/6-transcription`   | ⬜     | Mic → backend → transcript words flowing     |
@@ -90,7 +90,7 @@ Each phase is its own branch and PR against `main`.
 
 ---
 
-## Phase 3 — Script Input Screen ⬜
+## Phase 3 — Script Input Screen ✅
 
 **Branch:** `phase/3-script-input`
 
