@@ -1,24 +1,29 @@
 import { similarity } from "./levenshtein";
 
-const WINDOW_SIZE = 10;
-const LOOKAHEAD = 100;
-const MATCH_THRESHOLD = 0.4;
+const LOOKAHEAD = 50;
+const MATCH_THRESHOLD = 0.6;
+// How many recent words to use as context for matching
+const CONTEXT_WORDS = 3;
 
-const scoreWindow = (
+const scoreAtPosition = (
   scriptWords: string[],
-  transcriptWindow: string[],
-  startIndex: number
+  recentTranscript: string[],
+  scriptPos: number
 ): number => {
-  if (transcriptWindow.length === 0) return 0;
+  // Match the last transcript word against scriptWords[scriptPos],
+  // then use up to CONTEXT_WORDS-1 preceding words to confirm.
+  const lastWord = recentTranscript[recentTranscript.length - 1];
+  let score = similarity(lastWord, scriptWords[scriptPos]);
 
-  let total = 0;
-  for (let i = 0; i < transcriptWindow.length; i++) {
-    const scriptWord = scriptWords[startIndex + i];
-    if (!scriptWord) break;
-    total += similarity(transcriptWindow[i], scriptWord);
+  const contextLen = Math.min(recentTranscript.length - 1, CONTEXT_WORDS - 1);
+  for (let c = 1; c <= contextLen; c++) {
+    const tWord = recentTranscript[recentTranscript.length - 1 - c];
+    const sWord = scriptWords[scriptPos - c];
+    if (!sWord) break;
+    score += similarity(tWord, sWord);
   }
 
-  return total / transcriptWindow.length;
+  return score / (contextLen + 1);
 };
 
 export const findBestPosition = (
@@ -26,28 +31,24 @@ export const findBestPosition = (
   transcriptWords: string[],
   currentPosition: number
 ): number => {
-  const window = transcriptWords.slice(-WINDOW_SIZE);
-  if (window.length === 0) return currentPosition;
+  if (transcriptWords.length === 0) return currentPosition;
 
+  const recent = transcriptWords.slice(-CONTEXT_WORDS);
   let bestScore = MATCH_THRESHOLD;
-  let bestStart = -1;
+  let bestPos = currentPosition;
 
   const scanEnd = Math.min(
     currentPosition + LOOKAHEAD,
-    scriptWords.length - window.length
+    scriptWords.length - 1
   );
 
   for (let i = currentPosition; i <= scanEnd; i++) {
-    const score = scoreWindow(scriptWords, window, i);
+    const score = scoreAtPosition(scriptWords, recent, i);
     if (score > bestScore) {
       bestScore = score;
-      bestStart = i;
+      bestPos = i;
     }
   }
 
-  // no position exceeded the threshold — hold
-  if (bestStart === -1) return currentPosition;
-
-  // advance to the last word of the matched window
-  return Math.min(bestStart + window.length - 1, scriptWords.length - 1);
+  return bestPos;
 };

@@ -1,4 +1,7 @@
-import "dotenv/config";
+import dotenv from "dotenv";
+import path from "path";
+// .env lives at the repo root; CWD when server starts is server/
+dotenv.config({ path: path.resolve(__dirname, "../../.env") });
 import express from "express";
 import { createServer } from "http";
 import { WebSocketServer, WebSocket } from "ws";
@@ -14,7 +17,8 @@ const DEEPGRAM_URL =
   "&language=en-US" +
   "&encoding=linear16" +
   "&sample_rate=16000" +
-  "&punctuate=true";
+  "&punctuate=true" +
+  "&interim_results=true";
 
 wss.on("connection", (clientWs) => {
   const apiKey = process.env.DEEPGRAM_API_KEY;
@@ -37,8 +41,17 @@ wss.on("connection", (clientWs) => {
 
   // Forward Deepgram transcripts to the client
   deepgramWs.on("message", (data) => {
+    const text = data.toString();
+    try {
+      const msg = JSON.parse(text);
+      const transcript = msg?.channel?.alternatives?.[0]?.transcript;
+    } catch {
+      // ignore parse errors on metadata frames
+    }
     if (clientWs.readyState === WebSocket.OPEN) {
-      clientWs.send(data);
+      // Convert Buffer → string so the browser receives a text frame
+      // that JSON.parse can handle (sending a Buffer makes it a Blob on the client)
+      clientWs.send(data.toString());
     }
   });
 

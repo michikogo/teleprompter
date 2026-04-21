@@ -4,6 +4,8 @@ import { tokenizeScript, groupIntoLines } from "../lib/scriptTokenizer";
 type Props = {
   scriptText: string;
   currentWordIndex: number;
+  isListening: boolean;
+  lastHeard: string;
   onWordClick: (index: number) => void;
   onReset: () => void;
   onBack: () => void;
@@ -12,6 +14,8 @@ type Props = {
 const TeleprompterDisplay = ({
   scriptText,
   currentWordIndex,
+  isListening,
+  lastHeard,
   onWordClick,
   onReset,
   onBack,
@@ -54,7 +58,15 @@ const TeleprompterDisplay = ({
 
       <div className="teleprompter-controls">
         <button onClick={onBack}>← Back</button>
-        <button onClick={onReset}>↺ Reset</button>
+        <div className="controls-right">
+          <span className={`mic-indicator${isListening ? " active" : ""}`}>
+            {isListening ? "● Listening" : "○ Not listening"}
+          </span>
+          {lastHeard && (
+            <span className="last-heard">heard: "{lastHeard}"</span>
+          )}
+          <button onClick={onReset}>↺ Reset</button>
+        </div>
       </div>
     </div>
   );
